@@ -1,3 +1,5 @@
+This is a port of Zak Kembles nwatch firmware for the Argex WatchX.
+
 From users /u/sasapea3 on Reddit
 
 I tried to port NWatch source code. All except the fact that USB connection state can not be handled appropriately due to hardware problem and only one game is operated. It does not correspond to BLE / Sensor's added with watchX.
