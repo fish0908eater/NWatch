@@ -42,7 +42,7 @@ static void makeAlarmStr(char*, alarm_s*);
 void mAlarmsOpen()
 {
 	setMenuInfo(OPTION_COUNT, MENU_TYPE_STR, PSTR(STR_ALARMSMENU));
-	setMenuFuncs(MENUFUNC_NEXT, MENUFUNC_PREV, mSelect, itemLoader);
+	setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
 
 	setPrevMenuOpen(&prevMenuData, mAlarmsOpen);
 
@@ -75,7 +75,7 @@ static void selectAlarm()
 	static byte dayBit;
 	static bool wasPM;
 
-	setMenuFuncs(alarmsDown, alarmsUp, mSelect, itemLoader);
+	setMenuFuncs(alarmsDown, mSelect, alarmsUp, itemLoader);
 	menuData.func.draw = alarmsDraw;
 
 	switch(setting.now)
@@ -165,7 +165,7 @@ static void selectAlarm()
 			{
 				alarm_save(menuData.selected, &alarm);
 				setting.now = SETTING_NOW_NONE;
-				setMenuFuncs(MENUFUNC_NEXT, MENUFUNC_PREV, mSelect, itemLoader);
+				setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
 				menuData.func.draw = NULL;
 			}
 			break;
