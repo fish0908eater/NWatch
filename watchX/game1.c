@@ -41,7 +41,7 @@ static const byte ballImg[] PROGMEM ={
 static bool btnExit(void);
 static bool btnRight(void);
 static bool btnLeft(void);
-static display_t draw(void);
+display_t game1_draw(void);
 
 static byte uptMove;
 static s_ball ball;
@@ -56,7 +56,7 @@ void game1_start()
 
 	srand(millis());
 
-	display_setDrawFunc(draw);
+	display_setDrawFunc(game1_draw);
 	buttons_setFuncs(btnRight, btnExit, btnLeft);
 	
 	uptMove = UPT_MOVE_NONE;
@@ -95,7 +95,7 @@ static bool btnLeft()
 	return false;
 }
 
-static display_t draw()
+display_t game1_draw()
 {
 	bool gameEnded = ((score >= BLOCK_COUNT) || (lives == 255));
 

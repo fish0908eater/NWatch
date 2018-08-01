@@ -44,40 +44,38 @@ static void userWake(void);
 static void userSleep(void);
 
 #ifdef __AVR_ATmega32U4__
-#undef  USB_CONNECTED
-#define USB_CONNECTED() usb_connected()
-
 extern void usb_init();
-
-static bool usb_enable = true;
 
 static bool usb_connected()
 {
   bool rv;
-  if (!usb_enable)
+  uint8_t pr = PRR1 & _BV(PRUSB);
+  if (pr)
     power_usb_enable();
-  rv = USBSTA & _BV(VBUS);
-  if (!usb_enable)
+  rv = USB_CONNECTED();
+  if (pr)
     power_usb_disable();
   return rv;
 }
 
+#undef  USB_CONNECTED
+#define USB_CONNECTED() usb_connected()
+
 static void usb_power(bool on)
 {
+  uint8_t pr = PRR1 & _BV(PRUSB);
   if (on)
   {
-    if (!usb_enable)
+    if (pr)
     {
-      usb_enable = true;
       power_usb_enable();
       usb_init();
     }
   }
   else
   {
-    if (usb_enable)
+    if (!pr)
     {
-      usb_enable = false;
       USBCON &= ~_BV(USBE);  // Disable the USB  
       PLLCSR &= ~_BV(PLLE);  // Disable the USB Clock (PLL)
       power_usb_disable();

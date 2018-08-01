@@ -6,9 +6,9 @@
  * Web: http://blog.zakkemble.co.uk/diy-digital-wristwatch/
  */
 
-#if COMPILE_TORCH
-
 #include "common.h"
+
+#if COMPILE_TORCH
 
 static uint strobe;
 

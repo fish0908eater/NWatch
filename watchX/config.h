@@ -40,11 +40,11 @@
 #define OLED_CONTROLLER OLED_CONTROLLER_SSD1306
 
 // Compile options
-#define COMPILE_GAME1 0 // Breakout
-#define COMPILE_GAME2 1 // Car dodge
+#define COMPILE_GAME1 1 // Breakout
+#define COMPILE_GAME2 0 // Car dodge
 #define COMPILE_GAME3 0 // Flappy thing (not finished)
 #define COMPILE_ANIMATIONS 1
-#define COMPILE_STOPWATCH 1
+#define COMPILE_STOPWATCH 0
 #define COMPILE_TORCH 0
 #define COMPILE_BTRCCAR 0
 #define COMPILE_UART 0

@@ -9,6 +9,30 @@
 #ifndef RESOURCES_H_
 #define RESOURCES_H_
 
+#define MENU_EEPROM 1
+
+#if MENU_EEPROM
+#define selectbar_top    0x8038
+#define selectbar_bottom 0x805C
+#define menu_default     0x8080
+#define menu_alarm       0x8100
+#define menu_stopwatch   0x8180
+#define menu_torch       0x8200
+#define menu_settings    0x8280
+#define menu_diagnostic  0x8300
+#define menu_exit        0x8380
+#else
+extern const byte menu_default[];
+extern const byte menu_alarm[];
+extern const byte menu_stopwatch[];
+extern const byte menu_torch[];
+extern const byte menu_settings[];
+extern const byte menu_diagnostic[];
+extern const byte menu_exit[];
+extern const byte selectbar_bottom[];
+extern const byte selectbar_top[];
+#endif
+
 extern const char dowChars[];
 
 extern const char days[7][BUFFSIZE_STR_DAYS];
@@ -19,14 +43,8 @@ extern const byte stopwatch[];
 
 extern const byte dowImg[7][8];
 
-extern const byte menu_default[];
-extern const byte menu_alarm[];
-extern const byte menu_stopwatch[];
-extern const byte menu_torch[];
 //extern const byte menu_tunemaker[];
-extern const byte menu_settings[];
-extern const byte menu_diagnostic[];
-extern const byte menu_exit[];
+
 extern const byte menu_timedate[];
 extern const byte menu_sleep[];
 extern const byte menu_sound[];
@@ -39,9 +57,6 @@ extern const byte menu_volume[][128];
 extern const byte menu_rotate[];
 extern const byte menu_display[];
 extern const byte menu_sleeptimeout[];
-
-extern const byte selectbar_bottom[];
-extern const byte selectbar_top[];
 
 extern const byte usbIcon[];
 extern const byte chargeIcon[];

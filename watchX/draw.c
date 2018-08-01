@@ -75,7 +75,7 @@ inline static void setBuffByte(byte* buff, byte x, byte y, byte val)//, byte col
 
 inline static byte readPixels(const byte* loc, bool invert)
 {
-	byte pixels = pgm_read_byte(loc);
+	byte pixels = ((int)loc & 0x8000 ? eeprom_read_byte((int)loc & ~0x8000) : pgm_read_byte(loc));
 	if(invert)
 		pixels = ~pixels;
 	return pixels;

@@ -23,6 +23,10 @@
 static draw_f drawFunc;
 static display_f func;
 
+#if COMPILE_GAME1
+extern display_t game1_draw();
+#endif
+
 #if COMPILE_ANIMATIONS
 typedef struct{
 	byte height;
@@ -118,7 +122,11 @@ void display_update()
 	else
 	{
 		pwrmgr_setState(PWR_ACTIVE_DISPLAY, PWR_STATE_IDLE);
-		fpsMs = FRAME_RATE_MS;
+    fpsMs = FRAME_RATE_MS;
+#if COMPILE_GAME1
+    if (drawFunc == game1_draw)
+      fpsMs <<= 1;
+#endif
 	}
 }
 
