@@ -20,7 +20,8 @@ void adc_init()
 {
    // Digital Input Disable Register (for watchX only)
 #ifdef __AVR_ATmega32U4__
-  SET_BITS(DIDR2, ADC9D);
+  SET_BITS(DIDR0, ADC7D); // PF7 (N/C)
+  SET_BITS(DIDR2, ADC9D); // battry level
 #endif
 	// ADC registers
 	LOAD_BITS(ADCSRA, ADPS2, ADPS1, ADPS0); // 128 prescaler = 62.5KHz @ 8MHz
