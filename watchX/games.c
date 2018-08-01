@@ -8,12 +8,27 @@
 
 #include "common.h"
 
-#define OPTION_COUNT	2
+#define OPTION_COUNT	getItemCount()
 
 static prev_menu_s prevMenuData;
 
 static void mSelect(void);
 static void itemLoader(byte);
+
+static uint8_t getItemCount()
+{
+  uint8_t cnt = 0;
+#if COMPILE_GAME1
+  ++cnt;
+#endif
+#if COMPILE_GAME2
+  ++cnt;
+#endif
+#if COMPILE_GAME3
+  ++cnt;
+#endif
+  return cnt;
+}
 
 void mGamesOpen()
 {
@@ -33,15 +48,15 @@ static void mSelect()
 
 static void itemLoader(byte num)
 {
-	UNUSED(num);
+	num = 0;
 #if COMPILE_GAME1
-	setMenuOption_P(0, PSTR(GAME1_NAME), NULL, game1_start);
+	setMenuOption_P(num++, PSTR(GAME1_NAME), NULL, game1_start);
 #endif
 #if COMPILE_GAME2
-	setMenuOption_P(1, PSTR(GAME2_NAME), NULL, game2_start);
+	setMenuOption_P(num++, PSTR(GAME2_NAME), NULL, game2_start);
 #endif
 #if COMPILE_GAME3
-	setMenuOption_P(2, PSTR(GAME3_NAME), NULL, game3_start);
+	setMenuOption_P(num++, PSTR(GAME3_NAME), NULL, game3_start);
 #endif
 	addBackOption();
 }

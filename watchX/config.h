@@ -45,7 +45,7 @@
 #define COMPILE_GAME3 0 // Flappy thing (not finished)
 #define COMPILE_ANIMATIONS 1
 #define COMPILE_STOPWATCH 1
-#define COMPILE_TORCH 1
+#define COMPILE_TORCH 0
 #define COMPILE_BTRCCAR 0
 #define COMPILE_UART 0
 #define COMPILE_SCREENSHOT 0

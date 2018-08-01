@@ -6,6 +6,8 @@
  * Web: http://blog.zakkemble.co.uk/diy-digital-wristwatch/
  */
 
+#if COMPILE_TORCH
+
 #include "common.h"
 
 static uint strobe;
@@ -63,3 +65,5 @@ static display_t draw()
 
 	return DISPLAY_DONE;
 }
+
+#endif

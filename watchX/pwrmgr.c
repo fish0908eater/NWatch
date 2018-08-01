@@ -10,7 +10,7 @@
 #include "common.h"
 
 #ifdef __AVR_ATmega32U4__
-#undef  sleep_bod_disable()
+#undef  sleep_bod_disable
 #define sleep_bod_disable()
 // No peripherals are in use other than Timer0, Timer3, usart, and usb
 #define IS_PWR_SAVE_READY() false
@@ -44,7 +44,46 @@ static void userWake(void);
 static void userSleep(void);
 
 #ifdef __AVR_ATmega32U4__
+#undef  USB_CONNECTED
+#define USB_CONNECTED() usb_connected()
+
 extern void usb_init();
+
+static bool usb_enable = true;
+
+static bool usb_connected()
+{
+  bool rv;
+  if (!usb_enable)
+    power_usb_enable();
+  rv = USBSTA & _BV(VBUS);
+  if (!usb_enable)
+    power_usb_disable();
+  return rv;
+}
+
+static void usb_power(bool on)
+{
+  if (on)
+  {
+    if (!usb_enable)
+    {
+      usb_enable = true;
+      power_usb_enable();
+      usb_init();
+    }
+  }
+  else
+  {
+    if (usb_enable)
+    {
+      usb_enable = false;
+      USBCON &= ~_BV(USBE);  // Disable the USB  
+      PLLCSR &= ~_BV(PLLE);  // Disable the USB Clock (PLL)
+      power_usb_disable();
+    }
+  }
+}
 #endif
 
 void pwrmgr_init()
@@ -70,6 +109,10 @@ static void batteryCutoff()
 		oled_power(OLED_PWR_OFF);
 		time_shutdown();
 		
+#ifdef __AVR_ATmega32U4__
+    usb_power(false);
+#endif
+
 		// Stay in this loop until USB is plugged in or the battery voltage is above the threshold
 		do
 		{
@@ -78,13 +121,9 @@ static void batteryCutoff()
 			cli();
 			sleep_enable();
 			sleep_bod_disable();
-      UDCON |= _BV(RSTCPU);
 			sei();
 			sleep_cpu();
-      cli();
-      UDCON &= ~_BV(RSTCPU);
-      sei();
-			sleep_disable();
+      sleep_disable();
 			
 			// Get battery voltage
 			battery_updateNow();
@@ -147,6 +186,9 @@ void pwrmgr_update()
 #endif
 		{
 			// Shutdown
+#ifdef __AVR_ATmega32U4__
+      usb_power(false);
+#endif
 
 			if(userState == USER_ACTIVE)
 				userSleep();
@@ -162,19 +204,9 @@ void pwrmgr_update()
 			cli();
 			sleep_enable();
 			sleep_bod_disable();
-#ifdef __AVR_ATmega32U4__
-      USBCON &= ~_BV(USBE);  // Disable the USB  
-      PLLCSR &= ~_BV(PLLE);  // Disable the USB Clock (PLL)
-      power_usb_disable();
-#endif
       sei();
 			sleep_cpu();
       sleep_disable();
-#ifdef __AVR_ATmega32U4__
-      power_usb_enable();
-      usb_init();
-#endif
-
       debugPin_sleepPowerDown(LOW);
 
 			systemState = SYS_AWAKE;
@@ -189,12 +221,7 @@ void pwrmgr_update()
 
 #ifdef __AVR_ATmega32U4__
   // USB Power Control
-  cli();
-  if (USBSTA & _BV(VBUS))
-    USBCON &= ~_BV(FRZCLK);
-  else
-    USBCON |= _BV(FRZCLK);
-  sei();
+  usb_power(USB_CONNECTED());
 #endif
 }
 
