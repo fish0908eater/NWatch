@@ -51,7 +51,7 @@ void mTimeDateOpen()
 	saved = false;
 
 	setMenuInfo(OPTION_COUNT, MENU_TYPE_STR, PSTR(STR_TIMEDATEMENU));
-	setMenuFuncs(mDown, mSelect, mUp, itemLoader);
+	setMenuFuncs(mDown, mUp, mSelect, itemLoader);
 
 	setPrevMenuOpen(&prevMenuData, mTimeDateOpen);
 
@@ -95,14 +95,14 @@ static void itemLoader(byte num)
 
 static void beginSelect()
 {
-	setMenuFuncs(timeDataDown, mSelect, timeDataUp, itemLoader);
+	setMenuFuncs(timeDataDown, timeDataUp, mSelect, itemLoader);
 	menuData.func.draw = timeDateDraw;
 }
 
 static void endSelect()
 {
 	setting.now = SETTING_NOW_NONE;
-	setMenuFuncs(mDown, mSelect, mUp, itemLoader);
+	setMenuFuncs(mDown, mUp, mSelect, itemLoader);
 	menuData.func.draw = NULL;
 }
 

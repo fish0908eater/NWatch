@@ -13,8 +13,8 @@
 
 #ifdef __AVR_ATmega32U4__
 #define BTN_1_P	B6
-#define BTN_2_P	B4
-#define BTN_3_P	B7
+#define BTN_2_P	B7
+#define BTN_3_P	B4
 #define BTN_INT_ON()	(SET_BITS(PCICR, PCIE0))
 #define BTN_INT_OFF()	(CLEAR_BITS(PCICR, PCIE0))
 #else

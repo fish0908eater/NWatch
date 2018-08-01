@@ -77,8 +77,8 @@ void game2_start()
 	srand(millis());
 
 	display_setDrawFunc(draw);
-	buttons_setFuncs(btnUp, btnExit, btnDown);
-  
+	buttons_setFuncs(btnUp, btnDown, btnExit);
+
 	LOOP(CAR_COUNT, i)
 	{
 		cars[i].y = i * 16;

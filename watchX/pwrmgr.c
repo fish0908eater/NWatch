@@ -43,6 +43,10 @@ static void batteryCutoff(void);
 static void userWake(void);
 static void userSleep(void);
 
+#ifdef __AVR_ATmega32U4__
+extern void usb_init();
+#endif
+
 void pwrmgr_init()
 {
 	systemState = SYS_AWAKE;
@@ -74,8 +78,12 @@ static void batteryCutoff()
 			cli();
 			sleep_enable();
 			sleep_bod_disable();
+      UDCON |= _BV(RSTCPU);
 			sei();
 			sleep_cpu();
+      cli();
+      UDCON &= ~_BV(RSTCPU);
+      sei();
 			sleep_disable();
 			
 			// Get battery voltage
@@ -139,9 +147,7 @@ void pwrmgr_update()
 #endif
 		{
 			// Shutdown
-#ifdef __AVR_ATmega32U4__
-      USBCON |= _BV(FRZCLK);
-#endif
+
 			if(userState == USER_ACTIVE)
 				userSleep();
 
@@ -149,18 +155,27 @@ void pwrmgr_update()
 			set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
 			time_sleep();
-			debugPin_sleepPowerDown(HIGH);
+
+      debugPin_sleepPowerDown(HIGH);
 
 			// need to make sure no interrupts fired here!
-
 			cli();
 			sleep_enable();
 			sleep_bod_disable();
+#ifdef __AVR_ATmega32U4__
+      USBCON &= ~_BV(USBE);  // Disable the USB  
+      PLLCSR &= ~_BV(PLLE);  // Disable the USB Clock (PLL)
+      power_usb_disable();
+#endif
       sei();
 			sleep_cpu();
-			sleep_disable();
+      sleep_disable();
+#ifdef __AVR_ATmega32U4__
+      power_usb_enable();
+      usb_init();
+#endif
 
-			debugPin_sleepPowerDown(LOW);
+      debugPin_sleepPowerDown(LOW);
 
 			systemState = SYS_AWAKE;
 
@@ -168,14 +183,18 @@ void pwrmgr_update()
 				userWake();
 
 			//set_sleep_mode(SLEEP_MODE_IDLE);
+
 		}
 	}
+
 #ifdef __AVR_ATmega32U4__
-  // USB
+  // USB Power Control
+  cli();
   if (USBSTA & _BV(VBUS))
     USBCON &= ~_BV(FRZCLK);
   else
     USBCON |= _BV(FRZCLK);
+  sei();
 #endif
 }
 

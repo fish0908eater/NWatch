@@ -26,7 +26,7 @@ void mDiagOpen()
 	battery_update();
 
 	setMenuInfo(OPTION_COUNT, MENU_TYPE_STR, PSTR(STR_DIAGNOSTICSMENU));
-	setMenuFuncs(MENUFUNC_NEXT, mSelect, MENUFUNC_PREV, itemLoader);
+	setMenuFuncs(MENUFUNC_NEXT, MENUFUNC_PREV, mSelect, itemLoader);
 
 	setPrevMenuOpen(&prevMenuData, mDiagOpen);
 	
